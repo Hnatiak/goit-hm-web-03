@@ -23,9 +23,14 @@ def copy_file(file_path: Path) -> None:
 
 def process_folder(folder_path: Path) -> None:
     with ThreadPoolExecutor() as executor:
-        for file in folder_path.iterdir():
-            if file.is_file():
-                executor.submit(copy_file, file)
+        for item in folder_path.iterdir():
+            if item.is_file():
+                executor.submit(copy_file, item)
+                print(f"Processing folder: {folder_path}")
+        for item in folder_path.iterdir():
+            if item.is_dir():
+                process_folder(item)
+                print(f"Processing folder: {folder_path}")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(threadName)s %(message)s")
